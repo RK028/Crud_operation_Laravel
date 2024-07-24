@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Models\User;
+
+class Usercontroller extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        Log::info('Fetching all users.');
+        return User::all();
+    }
+
+    public function store(Request $request)
+    {
+        Log::info('Creating a new user.', ['request' => $request->all()]);
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'role' => 'required|in:Admin,Supervisor,Agent',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6',
+            'location_latitude' => 'nullable|string',
+            'location_longitude' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'timezone' => 'nullable|string|max:255',
+        ]);
+        $user = User::create($validated);
+        Log::info('User created successfully.', ['user' => $user]);
+        return response()->json($user, 201);
+    }
+
+    public function show(User $user)
+    {
+        Log::info('Fetching user details.', ['user' => $user]);
+        return $user;
+    }
+
+    public function update(Request $request, User $user)
+    {
+        Log::info('Updating user details.', ['request' => $request->all(), 'user' => $user]);
+        $validated = $request->validate([
+            // Validation rules...
+        ]);
+
+        $user->update($validated);
+        Log::info('User updated successfully.', ['user' => $user]);
+        return response()->json($user, 200);
+    }
+
+    public function destroy(User $user)
+    {
+        Log::info('Deleting user.', ['user' => $user]);
+        $user->delete();
+        Log::info('User deleted successfully.', ['user' => $user]);
+        return response()->json(null, 204);
+    }
+}
