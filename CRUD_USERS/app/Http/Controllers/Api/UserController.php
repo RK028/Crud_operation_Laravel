@@ -14,7 +14,7 @@ class Usercontroller extends Controller
      */
     public function index()
     {
-        Log::info('Fetching all users.');
+        // Log::info('Fetching all users.');
         return User::all();
     }
 
@@ -34,12 +34,12 @@ class Usercontroller extends Controller
         ]);
         $user = User::create($validated);
         Log::info('User created successfully.', ['user' => $user]);
-        return response()->json($user, 201);
+        return response()->json(['message' => 'User Create successfully.','data' => $user], 201);
     }
 
     public function show(User $user)
     {
-        Log::info('Fetching user details.', ['user' => $user]);
+        // Log::info('Fetching user details.', ['user' => $user]);
         return $user;
     }
 
@@ -47,12 +47,19 @@ class Usercontroller extends Controller
     {
         Log::info('Updating user details.', ['request' => $request->all(), 'user' => $user]);
         $validated = $request->validate([
-            // Validation rules...
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'role' => 'required|in:Admin,Supervisor,Agent',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'latitude' => 'nullable|numeric|between:-90,90',
+            'longitude' => 'nullable|numeric|between:-180,180',
+            'date_of_birth' => 'required|date',
+            'timezone' => 'required|string|max:255',
         ]);
 
         $user->update($validated);
         Log::info('User updated successfully.', ['user' => $user]);
-        return response()->json($user, 200);
+        return response()->json(['message' => 'User Update successfully.','data' => $user], 200);
     }
 
     public function destroy(User $user)
@@ -60,6 +67,6 @@ class Usercontroller extends Controller
         Log::info('Deleting user.', ['user' => $user]);
         $user->delete();
         Log::info('User deleted successfully.', ['user' => $user]);
-        return response()->json(null, 204);
+        return response()->json(['message' => 'User deleted successfully.'], 200);
     }
 }
