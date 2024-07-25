@@ -15,7 +15,12 @@ class Usercontroller extends Controller
     public function index()
     {
         // Log::info('Fetching all users.');
-        return User::all();
+        $users = User::all();
+        return response()->json([
+            'success' => true,
+            'data' => $users,
+            'message' => 'Users retrieved successfully.'
+        ], 200);
     }
 
     public function store(Request $request)
@@ -34,13 +39,17 @@ class Usercontroller extends Controller
         ]);
         $user = User::create($validated);
         Log::info('User created successfully.', ['user' => $user]);
-        return response()->json(['message' => 'User Create successfully.','data' => $user], 201);
+        return response()->json(['success' => true, 'message' => 'User Create successfully.','data' => $user], 201);
     }
 
     public function show(User $user)
     {
         // Log::info('Fetching user details.', ['user' => $user]);
-        return $user;
+        return response()->json([
+            'success' => true,
+            'data' => $user,
+            'message' => 'User details retrieved successfully.'
+        ], 200);
     }
 
     public function update(Request $request, User $user)
@@ -59,7 +68,7 @@ class Usercontroller extends Controller
 
         $user->update($validated);
         Log::info('User updated successfully.', ['user' => $user]);
-        return response()->json(['message' => 'User Update successfully.','data' => $user], 200);
+        return response()->json(['success' => true,'message' => 'User Update successfully.','data' => $user], 200);
     }
 
     public function destroy(User $user)
@@ -67,6 +76,9 @@ class Usercontroller extends Controller
         Log::info('Deleting user.', ['user' => $user]);
         $user->delete();
         Log::info('User deleted successfully.', ['user' => $user]);
-        return response()->json(['message' => 'User deleted successfully.'], 200);
+        return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully.'
+        ], 200);
     }
 }

@@ -19,13 +19,13 @@ class DatabaseSeeder extends Seeder
         User::create([
             'first_name' => 'Admin',
             'last_name' => 'User',
-            'role' => 'Admin', // Assuming '1' represents Admin
+            'role' => 'Admin', 
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('Welcome@l1'), // Default password
-            'location_latitude' => '37.7749', // Example latitude
-            'location_longitude' => '-122.4194', // Example longitude
-            'date_of_birth' => '1980-01-01', // Example date of birth
-            'timezone' => 'UTC', // Example timezone
+            'password' => Hash::make('Welcome@l1'),
+            'location_latitude' => '37.7749', 
+            'location_longitude' => '-122.4194',
+            'date_of_birth' => '1980-01-01',
+            'timezone' => 'UTC', 
         ]);
     }
 }
